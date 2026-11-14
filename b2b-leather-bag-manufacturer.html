@@ -49,7 +49,7 @@ h1,h2,h3{font-family:var(--title);font-weight:400;margin:0}
 .anim.is-in{opacity:1;transform:none}
 
 /* Header (theme header, shown for preview only) */
-.header{position:relative;z-index:5;background:#fff}
+.header{position:sticky;top:0;z-index:20;background:#fff}
 .header__row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding-top:16px;padding-bottom:16px}
 .nav{display:flex;gap:30px;font-family:var(--title);font-size:11px;letter-spacing:1px;line-height:33px}
 .nav a{position:relative;text-decoration:none}
@@ -138,6 +138,15 @@ h1,h2,h3{font-family:var(--title);font-weight:400;margin:0}
 .form-note{font-size:12px;color:var(--text-lighter);margin-top:14px;line-height:1.6}
 .success{display:none;margin-top:18px;padding:14px 18px;background:var(--bg-dark);font-size:13px;line-height:1.7}
 
+/* Sticky enquiry prompts: header link (desktop) and bottom bar (mobile).
+   Shown after the hero, hidden once the form is reached. */
+.hdr-cta{position:relative;font-family:var(--title);font-size:11px;letter-spacing:1px;color:var(--text);text-decoration:none;line-height:33px;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.hdr-cta::before{content:"";position:absolute;left:0;bottom:0;width:100%;height:.1em;background:currentColor;transform:translateY(.2em) scaleX(0);transform-origin:center;transition:transform .3s}
+.hdr-cta:hover::before{transform:translateY(.2em) scaleX(1)}
+.show-cta .hdr-cta{opacity:1;visibility:visible}
+.mbar{display:none}
+#enquiry{scroll-margin-top:80px}
+
 /* Footer (theme footer, shown for preview only) */
 .footer{border-top:1px solid rgba(19,19,19,.08);padding:64px 0 0}
 .footer__cols{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
@@ -158,7 +167,10 @@ h1,h2,h3{font-family:var(--title);font-weight:400;margin:0}
 @media (max-width:767px){
   :root{--space:72px}
   .container{padding:0 18px}
-  .nav,.header__tools .loc{display:none}
+  .nav,.header__tools .loc,.hdr-cta{display:none}
+  .mbar{display:block;position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:1px solid rgba(19,19,19,.08);padding:10px 18px calc(10px + env(safe-area-inset-bottom,0px));transform:translateY(100%);transition:transform .35s ease}
+  .show-cta .mbar{transform:none}
+  .mbar .btn{display:block;width:100%;text-align:center;background:#fff}
   .menu-btn{display:block}
   .header__row{padding-top:14px;padding-bottom:14px}
   .logo img{height:25px}
@@ -177,6 +189,7 @@ h1,h2,h3{font-family:var(--title);font-weight:400;margin:0}
   .newsletter form{flex-direction:column}
 }
 @media (prefers-reduced-motion:reduce){
+  .mbar,.hdr-cta{transition:none}
   .anim{opacity:1;transform:none;transition:none}
   .title::after{transform:scaleX(1);transition:none}
   html{scroll-behavior:auto}
@@ -197,6 +210,7 @@ h1,h2,h3{font-family:var(--title);font-weight:400;margin:0}
     <svg class="menu-btn" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#131313" stroke-width="1.4" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
     <a class="logo" href="https://www.ecotorie.com/"><img src="data:image/png;base64,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" alt="écotorie"></a>
     <div class="header__tools">
+      <a class="hdr-cta" href="#enquiry" tabindex="-1">Bulk Order Enquiry</a>
       <span class="loc">India (INR ₹)</span>
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 016 0v2"/></svg>
@@ -435,6 +449,8 @@ h1,h2,h3{font-family:var(--title);font-weight:400;margin:0}
   </div>
 </footer>
 
+<div class="mbar" aria-hidden="true"><a class="btn" href="#enquiry" tabindex="-1">Bulk Order Enquiry</a></div>
+
 <script type="application/ld+json">
 {
  "@context":"https://schema.org",
@@ -474,6 +490,25 @@ h1,h2,h3{font-family:var(--title);font-weight:400;margin:0}
     }, {threshold: 0.5});
     counters.forEach(function(c){ c.textContent = '0'; co.observe(c); });
   }
+
+  // Show the sticky enquiry prompts after the hero, hide them once the form is reached
+  var hero = document.querySelector('.hero'), form = document.getElementById('enquiry'), root = document.documentElement;
+  var prompts = document.querySelectorAll('.hdr-cta, .mbar, .mbar a');
+  var ticking = false;
+  function update(){
+    ticking = false;
+    var show = hero.getBoundingClientRect().bottom < 0 && form.getBoundingClientRect().top > window.innerHeight * 0.85;
+    if (show !== root.classList.contains('show-cta')) {
+      root.classList.toggle('show-cta', show);
+      prompts.forEach(function(el){
+        if (el.classList.contains('mbar')) el.setAttribute('aria-hidden', show ? 'false' : 'true');
+        else el.setAttribute('tabindex', show ? '0' : '-1');
+      });
+    }
+  }
+  window.addEventListener('scroll', function(){ if (!ticking) { ticking = true; requestAnimationFrame(update); } }, {passive:true});
+  window.addEventListener('resize', update);
+  update();
 
   // Preview-only form check. On the live site, connect to Shopify Forms or the theme contact form.
   document.getElementById('quote').addEventListener('submit', function(e){
